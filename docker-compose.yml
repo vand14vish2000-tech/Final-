@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  backend-service:
+    build: ./backend
+    container_name: product-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+
+  frontend-service:
+    build: ./frontend
+    container_name: product-frontend
+    ports:
+      - "3000:3000"
+    # Ensures the frontend waits for the backend to start
+    depends_on:
+      - backend-service
