@@ -1,0 +1,13 @@
+# Ignore node_modules folders in both tiers
+**/node_modules/
+
+# Ignore React build output folder
+frontend/build/
+
+# Ignore local system tracking files
+.DS_Store
+Thumbs.db
+*.log
+
+# Ignore local environment files if added later
+.env
