@@ -11,3 +11,4 @@ Thumbs.db
 
 # Ignore local environment files if added later
 .env
+# Webhook Handshake Complete
