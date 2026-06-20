@@ -8,7 +8,7 @@ function App() {
   const [category, setCategory] = useState('');
 
   // Dynamically points to backend container/service port 5000
-  const API_URL = `http://${window.location.hostname}:5000/api/products`;
+  const API_URL = `http://16.16.252.212:5000/api/products`;
 
   const fetchProducts = async () => {
     try {
