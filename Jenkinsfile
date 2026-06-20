@@ -7,7 +7,7 @@ pipeline {
         BACKEND_IMAGE  = 'product-backend'
         
         // 🚨 STEP 1: CHANGE THIS to your actual AWS EC2 Public IP address!
-        EC2_PUBLIC_IP   = 'YOUR_EC2_PUBLIC_IP_HERE'
+        EC2_PUBLIC_IP   = '16.16.252.212'
         
         PATH = "/usr/local/bin:/usr/bin:/bin:${env.PATH}"
     }
@@ -26,7 +26,7 @@ pipeline {
         stage('Docker Build') {
             steps {
                 echo 'Building fresh production Docker images via compose...'
-                // Passes your EC2 IP into the build so the browser code knows where port 5000 lives
+                // Passes your EC2 IP into the Docker build stage
                 sh "REACT_APP_API_URL=http://${EC2_PUBLIC_IP}:5000 docker compose build --no-cache"
             }
         }
@@ -65,6 +65,7 @@ pipeline {
                         kind load docker-image "${DOCKER_NAMESPACE}/${FRONTEND_IMAGE}:${BUILD_NUMBER}" --name my-cluster
                         kind load docker-image "${DOCKER_NAMESPACE}/${BACKEND_IMAGE}:${BUILD_NUMBER}" --name my-cluster
                         
+                        # Replaces the runtime placeholders inside your manifests.yaml
                         sed -i "s|DOCKER_NAMESPACE_PLACEHOLDER|${DOCKER_NAMESPACE}|g" k8s/manifests.yaml
                         sed -i "s|IMAGE_TAG_PLACEHOLDER|${BUILD_NUMBER}|g" k8s/manifests.yaml
                         sed -i "s|BACKEND_API_URL_PLACEHOLDER|http://${EC2_PUBLIC_IP}:5000|g" k8s/manifests.yaml
@@ -84,7 +85,7 @@ pipeline {
                 echo 'Establishing background tunnels for external browser visibility...'
                 // Tunnels Port 3000 for the UI web files
                 sh 'nohup kubectl port-forward --address 0.0.0.0 service/product-frontend-service 3000:80 > pf_frontend.log 2>&1 &'
-                // Tunnels Port 5000 for data communication
+                // Tunnels Port 5000 for backend data communication
                 sh 'nohup kubectl port-forward --address 0.0.0.0 service/product-backend-service 5000:5000 > pf_backend.log 2>&1 &'
                 
                 sh 'sleep 3'
