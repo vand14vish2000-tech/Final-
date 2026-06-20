@@ -35,6 +35,6 @@ app.post('/api/products', (req, res) => {
     res.status(201).json(newProduct);
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
     console.log(`[START] Backend microservice running on port ${PORT}`);
 });
