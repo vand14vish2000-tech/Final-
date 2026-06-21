@@ -19,3 +19,4 @@
    19  sudo systemctl restart jenkins
    20  sudo rm -rf /tmp/*
    21  history
+   vandana
